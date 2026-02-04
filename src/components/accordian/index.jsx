@@ -1,34 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { content } from "./content";
 
-function Posts() {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function Accordian() {
+  const [selected, setSelected] = useState(null);
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((res) => res.json())
-      .then((data) => {
-        setPosts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching posts:", error);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-
+  function handleSingleSelction(getCurrentId) {
+    setSelected(getCurrentId === selected ? null : getCurrentId);
+  }
   return (
-    <div>
-      <h2>Post Titles</h2>
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id}>{post.title}</li>
-        ))}
-      </ul>
+    <div className=" ">
+      {content.map((contentList) => (
+        <li
+          className="text-4xl bg-amber-500 list-none border-2 border-solid m-2"
+          key={content.id}
+        >
+          <div onClick={() => handleSingleSelction(contentList.id)}>
+            {contentList.title}
+            <span className="p-4 cursor-pointer flex justify-end">+</span>
+          </div>
+          <div>
+            {selected === contentList.id ? <div>{contentList.body}</div> : null}
+          </div>
+        </li>
+      ))}
     </div>
   );
 }
-
-export default Posts;
